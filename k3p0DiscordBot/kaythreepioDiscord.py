@@ -73,6 +73,4 @@ async def showline(name, data):
     sheet = ReadFromSheet()
     await bot.say("```{0}```".format(sheet.read_sheet_data(name, data)))
 
-bot.run('Mzk0MjgyNjI4NzI1MDgwMDY0.DSCD6w.rWN9RAK09bsqvDj-X_ZlxWFp8iE')
 
-#https://discordapp.com/api/oauth2/authorize?client_id=394282628725080064&permissions=201353217&scope=bot
