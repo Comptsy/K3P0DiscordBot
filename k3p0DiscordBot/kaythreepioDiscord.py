@@ -73,4 +73,9 @@ async def showline(name, data):
     sheet = ReadFromSheet()
     await bot.say("```{0}```".format(sheet.read_sheet_data(name, data)))
 
-
+f = open('bot_id', 'r')
+token = f.readline()
+f.close()
+token = token.replace('\n', '')
+#print(token)
+bot.run(token)
