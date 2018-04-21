@@ -3,10 +3,14 @@ from discord.ext import commands
 from expcalc import ExpCalc
 import random
 from characterRecord import *
+import time
+import atexit
 
 
 bot = commands.Bot(command_prefix='$', description='Multi-purpose D&D bot, Human-Cyborg relations')
 
+#Supposedly there is a way to display commands in categories in the $help menu, but I can't get it working
+#Testing commands
 @bot.command(brief = "Does it work?", description = "Does it work?")
 async def test():
     await bot.say("It works.")
@@ -19,6 +23,7 @@ async def areyouon():
 async def whatisthepoint():
     await bot.say("Only a fool would think there is one.")
 
+#Just-for-fun commands
 @bot.command(brief = "You've always wondered", description = "Tells the meaning of life")
 async def meaningoflife():
     choice = random.randint(0,1)
@@ -28,62 +33,6 @@ async def meaningoflife():
         await bot.say("Try to be nice to people, avoid eating fat, read a good book every now and then, get some walking in, and try to live in peace and harmony with people of all creeds and nations.")
     else:
         await bot.say("If this message appeared, you broke it.  Good job.")
-
-@bot.command(brief = "Calculate EXP from monster", description = "Calculate EXP from a known monster by giving monster, average party level, and number of party members.")
-async def exp(monster, partyLvl, partyNum):
-    monster = monster.title()
-    partyLvl = partyLvl
-    partyNum = partyNum
-    await bot.say("EXP per player is " + str(ExpCalc.calcExp(monster, partyLvl, partyNum)))
-
-@bot.command(brief = "Roll dice", description = "Roll number of dice, type of die")
-async def roll(die, sign=None, add=0):
-    dice = ['d20', 'd12', 'd10', 'd8', 'd6', 'd4', 'd3', 'd%', 'd30', 'd2']
-    roll = 0
-    num = die.split('d')
-    if(sign):
-        if(sign == "+"):
-            add = add
-        elif(sign == "-"):
-            add = add * -1
-        else:
-            try:
-                if(int(sign)):
-                    add = sign
-            except ValueError:
-                print("Invalid sign")
-                await bot.say("Invalid Sign")
-    if(int(num[0]) > 256):
-        print("Somebody tried to use an obscenely large number again!")
-        await bot.say("Nice try! Not falling for that again, Sean!")
-    else:
-        die = 'd' + num[1]
-        if die in dice:
-            for i in range(1, int(num[0]) + 1):
-                rolls = {'d20':random.randint(1,20), 'd12':random.randint(1,12), 'd10':random.randint(1,10),
-                'd8':random.randint(1,8), 'd6':random.randint(1,6), 'd4':random.randint(1,4),
-                'd3':random.randint(1,3), 'd2':random.randint(1,2), 'd30':random.randint(1,30), 'd%':random.randint(1,100)}
-                thisRoll = rolls[die]
-                if(die == 'd20' and thisRoll == 20):
-                    print("Nat 20")
-                    await bot.say("`Critical success: natural 20!`")
-                elif(die == 'd20' and thisRoll == 1):
-                    print("Nat 1")
-                    await bot.say("`Critical failure: natural 1!`")
-                elif(die == 'd30' and thisRoll == 30):
-                    print("Nat 30")
-                    await bot.say("`Critical success: natural 30!`")
-                elif(die == 'd30' and thisRoll == 1):
-                    print("Nat 1 (d30)")
-                    await bot.say("`Critical failure: natural 1!`")
-                else:
-                    pass
-                roll = roll + rolls[die]
-                print(thisRoll)
-            roll = roll + add
-            await bot.say("`Total roll is {0}`".format(roll))
-        else:
-            await bot.say("I don't know that die!")
 
 @bot.command(brief = "Translate from English to Groot", description = "Translate from English to the language spoken by Groot in \"Guardians of the Galaxy\"")
 async def groot(phrase):
@@ -120,6 +69,7 @@ def getBiden():
 async def biden():
     await bot.say(getBiden())
 
+#D&D-related commands
 @bot.command(brief = "Helps the DM", description = "Says what the DM is sick of saying")
 async def dm(arg=None):
     a = "Shut the hell up and get back on the quest!"
@@ -139,6 +89,63 @@ async def dm(arg=None):
         print("Sending random phrase")
         await bot.say(argsn[num])
 
+@bot.command(brief = "Calculate EXP from monster", description = "Calculate EXP from a known monster by giving monster, average party level, and number of party members.")
+async def exp(monster, partyLvl, partyNum):
+    monster = monster.title()
+    partyLvl = partyLvl
+    partyNum = partyNum
+    await bot.say("EXP per player is " + str(ExpCalc.calcExp(monster, partyLvl, partyNum)))
+
+@bot.command(brief = "Roll dice", description = "Roll number of dice, type of die")
+async def roll(die, sign=None, add=0):
+    dice = ['d20', 'd12', 'd10', 'd8', 'd6', 'd4', 'd3', 'd%', 'd30', 'd2']
+    roll = 0
+    num = die.split('d')
+    if(sign):
+        if(sign == "+"):
+            add = add
+        elif(sign == "-"):
+            add = add * -1
+        else:
+            try:
+                if(int(sign)):
+                    add = sign
+                else:
+                    pass
+            except ValueError:
+                print("Invalid sign")
+                await bot.say("Invalid Sign")
+    if(int(num[0]) > 256):
+        print("Somebody tried to use an obscenely large number again!")
+        await bot.say("Nice try! Not falling for that again, Sean!")
+    else:
+        die = 'd' + num[1]
+        if die in dice:
+            for i in range(1, int(num[0]) + 1):
+                rolls = {'d20':random.randint(1,20), 'd12':random.randint(1,12), 'd10':random.randint(1,10),
+                'd8':random.randint(1,8), 'd6':random.randint(1,6), 'd4':random.randint(1,4),
+                'd3':random.randint(1,3), 'd2':random.randint(1,2), 'd30':random.randint(1,30), 'd%':random.randint(1,100)}
+                thisRoll = rolls[die]
+                if(die == 'd20' and thisRoll == 20):
+                    print("Nat 20")
+                    await bot.say("`Critical success: natural 20!`")
+                elif(die == 'd20' and thisRoll == 1):
+                    print("Nat 1")
+                    await bot.say("`Critical failure: natural 1!`")
+                elif(die == 'd30' and thisRoll == 30):
+                    print("Nat 30")
+                    await bot.say("`Critical success: natural 30!`")
+                elif(die == 'd30' and thisRoll == 1):
+                    print("Nat 1 (d30)")
+                    await bot.say("`Critical failure: natural 1!`")
+                else:
+                    pass
+                roll = roll + rolls[die]
+                print(thisRoll)
+            roll = roll + int(add)
+            await bot.say("`Total roll is {0}`".format(roll))
+        else:
+            await bot.say("I don't know that die!")
 
 
 #Character sheet creation and editing
@@ -164,6 +171,11 @@ async def showline(name, data):
     sheet = ReadFromSheet()
     await bot.say("```{0}```".format(sheet.read_sheet_data(name, data)))
 
+#Displays in console on program end
+def on_shutdown():
+    print("Daisy..., Daisy...")
+
+atexit.register(on_shutdown)
 
 f = open('bot_id', 'r')
 token = f.readline()
