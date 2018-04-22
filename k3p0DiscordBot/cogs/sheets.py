@@ -17,7 +17,10 @@ class Sheets:
     async def addto(self, name, data):
         sheet = WriteToSheet()
         sheet.add_line(name, data)
-        await self.bot.say("`Added line \"{0}\" to {1}`".format(data, name))
+        if(sheet.add_line(name, data)):
+            await self.bot.say("`Added line \"{0}\" to {1}`".format(data, name))
+        else:
+            await self.bot.say("`Didn't add line to sheet`")
 
     @commands.command(brief = "Print entire sheet", description = "Print entire character sheet")
     async def showsheet(self, name):

@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import random
 import time
+import asyncio
 
 class Jokes:
     """Jokes and memes"""
@@ -30,11 +31,15 @@ class Jokes:
 
     @commands.command(brief = "A torture device", description="Tells the Monk Joke, in a new and improved form")
     async def monk(self):
+        '''
         joke = open('MonkJokeUltimate', 'r')
         for line in joke:
+            print(line)
             self.bot.say(line)
-            time.sleep(1)
+            time.sleep(10)
         joke.close()
+        '''
+
 
 def setup(bot):
     bot.add_cog(Jokes(bot))
