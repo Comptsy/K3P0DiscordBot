@@ -21,7 +21,7 @@ async def meaningoflife():
         await bot.say("If this message appeared, you broke it.  Good job.")
 
 @bot.command(brief = "Translate from English to Groot", description = "Translate from English to the language spoken by Groot in \"Guardians of the Galaxy\"")
-async def groot(phrase):
+async def groot(*, phrase):
         groot = ["I", "am", "Groot."]
         final = []
         for i in groot:
@@ -36,7 +36,6 @@ async def groot(phrase):
             print(i)
         await bot.say(final[0] + ' ' + final[1] + ' ' + final[2])
 
-
 if(__name__ == '__main__'):
     bot.load_extension('cogs.testing')
     bot.load_extension('cogs.dnd')
@@ -45,7 +44,7 @@ if(__name__ == '__main__'):
 
 #Displays in console on program end
 def on_shutdown():
-    print("Daisy..., Daisy...")
+    print("End of line.")
 
 atexit.register(on_shutdown)
 
