@@ -30,6 +30,15 @@ class Jokes(commands.Cog):
         #await self.bot.say(self.getBiden())
         await ctx.send("Mr. Biden is too busy campaigning to provide memes at this time.  Please try again later.")
 
+    @commands.command(brief = "Submit link to Joe Biden meme", description = "Submit a link to a Joe Biden meme for the rotation")
+    async def votebiden(self, ctx, data):
+        f = open('bidenmemes_submissions', 'a')
+        f.write('{0}\n'.format(data))
+        f.close()
+        await ctx.send("Thank you for your submission")
+        
+
+
     @commands.command(brief = "A torture device", description="Tells the Monk Joke, in a new and improved form")
     async def monk(self, ctx):
         '''

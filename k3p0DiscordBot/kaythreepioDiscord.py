@@ -9,9 +9,10 @@ import cogs.testing as T
 import cogs.dnd as D
 import cogs.jokes as J
 import cogs.sheets as S
+import cogs.philosophy as P
 
 
-bot = commands.Bot(command_prefix='sudo ', description='Multi-purpose D&D bot, Human-Cyborg relations')
+bot = commands.Bot(command_prefix='%', description='Multi-purpose D&D bot, Human-Cyborg relations')
 
 @bot.event
 async def on_connect():
@@ -30,26 +31,6 @@ async def on_message(message):
     await bot.process_commands(message)
 
 #Commands that don't fit in a category
-@bot.command(brief = "You've always wondered", description = "Tells the meaning of life")
-async def meaningoflife(ctx):
-    choice = random.randint(0,1)
-    if(choice == 0):
-        await ctx.send("42.")
-    elif(choice == 1):
-        await ctx.send("Try to be nice to people, avoid eating fat, read a good book every now and then, get some walking in, and try to live in peace and harmony with people of all creeds and nations.")
-    else:
-        await ctx.send("If this message appeared, you broke it.  Good job.")
-
-@bot.command(brief = "Gives the answer", description = "Tells the answer to the Ultimate Question of Life, the Universe, and Everything")
-async def answer(ctx):
-    await ctx.send("42.")
-
-@bot.command(brief = "Gives the question", description = "Tells the Ultimate Question of Life, the Universe and Everything, to which the answer is 42")
-async def question(ctx):
-    eggs = random.randint(0,6)
-    questions = ["What do you get if you multiply six by nine?", "How many roads must a man walk down?", "What's six times seven?", "Why?", "Are we stronger than the elements?", "What's yellow and dangerous?", "How many vogons does it take to change a lightbulb?"]
-    await ctx.send(questions[eggs])
-
 @bot.command(brief = "Translate from English to Groot", description = "Translate from English to the language spoken by Groot in \"Guardians of the Galaxy\"")
 async def groot(ctx, *, phrase):
         groot = ["I", "am", "Groot."]
@@ -101,12 +82,16 @@ async def rickroll(ctx, user: discord.Member):
 async def relax(ctx):
     await ctx.send("https://www.youtube.com/watch?v=V-_O7nl0Ii0&feature=youtu.be")
     
+@bot.command(brief = "Contribute to development", description = "Help make K-3P0 better by contributing code on GitHub!")
+async def contribute(ctx):
+    await ctx.send("View the source code and contribute here:\n https://github.com/Comptsy/K3P0DiscordBot")
 
 
 bot.add_cog(T.Testing(bot))
 bot.add_cog(D.DnD(bot))
 bot.add_cog(J.Jokes(bot))
 bot.add_cog(S.Sheets(bot))
+bot.add_cog(P.Philosophy(bot))
 
 #Displays in console on program end
 def on_shutdown():
@@ -119,4 +104,4 @@ token = f.readline()
 f.close()
 token = token.replace('\n', '')
 #print(token)
-bot.run('Mzk0MjgyNjI4NzI1MDgwMDY0.XeBRaA.nfpc0qNbYNeRO4p8FktJMmNlhQw')
+bot.run(token)
