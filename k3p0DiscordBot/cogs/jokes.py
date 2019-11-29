@@ -4,7 +4,7 @@ import random
 import time
 import asyncio
 
-class Jokes:
+class Jokes(commands.Cog):
     """Jokes and memes"""
     def __init__(self, bot):
         self.bot = bot
@@ -26,11 +26,12 @@ class Jokes:
         f.close()
 
     @commands.command(brief = "Send random Joe Biden meme", description = "Sends a link to a random Joe Biden meme")
-    async def biden(self):
-        await self.bot.say(self.getBiden())
+    async def biden(self, ctx):
+        #await self.bot.say(self.getBiden())
+        await ctx.send("Mr. Biden is too busy campaigning to provide memes at this time.  Please try again later.")
 
     @commands.command(brief = "A torture device", description="Tells the Monk Joke, in a new and improved form")
-    async def monk(self):
+    async def monk(self, ctx):
         '''
         joke = open('MonkJokeUltimate', 'r')
         for line in joke:
@@ -39,7 +40,4 @@ class Jokes:
             time.sleep(10)
         joke.close()
         '''
-
-
-def setup(bot):
-    bot.add_cog(Jokes(bot))
+        await ctx.send("You have been spared fromm The Monk Joke.  This time.")

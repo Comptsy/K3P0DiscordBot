@@ -4,14 +4,15 @@ from expcalc import ExpCalc
 import random
 
 
-class DnD:
+class DnD(commands.Cog):
     """Commands to help with D&D, from die rollers to exp calculation"""
     def __init__(self, bot):
         self.bot = bot
+        self.last_member = None
 
     #D&D-related commands
     @commands.command(brief = "Helps the DM", description = "Says what the DM is sick of saying")
-    async def dm(self, arg=None):
+    async def dm(self, ctx, arg=None):
         a = "Shut the hell up and get back on the quest!"
         b = "Stop trying to turn the campaign into a dating sim!"
         c = "No, you can't seduce that so don't even try!"
@@ -22,22 +23,22 @@ class DnD:
         args = {'quiet':a, 'dating':b, 'seduce':c, 'focus':d, 'rule':e, 'guard':f}
         if(args.get(arg)):
             print("Argument given")
-            await self.bot.say(args[arg])
+            await ctx.send(args[arg])
         else:
             argsn = [a, b, c, d, e, f]
             num = random.randint(0,5)
             print("Sending random phrase")
-            await self.bot.say(argsn[num])
+            await ctx.send(argsn[num])
 
     @commands.command(brief = "Calculate EXP from monster", description = "Calculate EXP from a known monster by giving monster, average party level, and number of party members.")
-    async def exp(self, monster, partyLvl, partyNum):
+    async def exp(self, ctx, monster, partyLvl, partyNum):
         monster = monster.title()
         partyLvl = partyLvl
         partyNum = partyNum
-        await self.bot.say("EXP per player is " + str(ExpCalc.calcExp(monster, partyLvl, partyNum)))
+        await ctx.send("EXP per player is " + str(ExpCalc.calcExp(monster, partyLvl, partyNum)))
 
     @commands.command(brief = "Roll dice", description = "Roll number of dice, type of die")
-    async def roll(self, die, sign=None, add=0):
+    async def roll(self, ctx, die, sign=None, add=0):
         dice = ['d20', 'd12', 'd10', 'd8', 'd6', 'd4', 'd3', 'd%', 'd30', 'd2']
         roll = 0
         num = die.split('d')
@@ -54,10 +55,10 @@ class DnD:
                         pass
                 except ValueError:
                     print("Invalid sign")
-                    await self.bot.say("Invalid Sign")
+                    await ctx.send("Invalid Sign")
         if(int(num[0]) > 256):
             print("Somebody tried to use an obscenely large number again!")
-            await self.bot.say("Nice try! Not falling for that again, Sean!")
+            await ctx.send("Nice try! Not falling for that again, Sean!")
         else:
             die = 'd' + num[1]
             if die in dice:
@@ -68,24 +69,21 @@ class DnD:
                     thisRoll = rolls[die]
                     if(die == 'd20' and thisRoll == 20):
                         print("Nat 20")
-                        await self.bot.say("`Critical success: natural 20!`")
+                        await ctx.send("`Critical success: natural 20!`")
                     elif(die == 'd20' and thisRoll == 1):
                         print("Nat 1")
-                        await self.bot.say("`Critical failure: natural 1!`")
+                        await ctx.send("`Critical failure: natural 1!`")
                     elif(die == 'd30' and thisRoll == 30):
                         print("Nat 30")
-                        await self.bot.say("`Critical success: natural 30!`")
+                        await ctx.send("`Critical success: natural 30!`")
                     elif(die == 'd30' and thisRoll == 1):
                         print("Nat 1 (d30)")
-                        await self.bot.say("`Critical failure: natural 1!`")
+                        await ctx.send("`Critical failure: natural 1!`")
                     else:
                         pass
                     roll = roll + rolls[die]
                     print(thisRoll)
                 roll = roll + int(add)
-                await self.bot.say("`Total roll is {0}`".format(roll))
+                await ctx.send("`Total roll is {0}`".format(roll))
             else:
-                await self.bot.say("I don't know that die!")
-
-def setup(bot):
-    bot.add_cog(DnD(bot))
+                await ctx.send("I don't know that die!")
